@@ -7,7 +7,7 @@ import Navbar from './components/Navbar';
 // Import Pages
 import Home from './pages/Home/Home';
 import Bars from './pages/BarsTinder/Bars';
-import Acomodation from './pages/Acomodation/Acomodation';
+import Acomodation from './pages/Acomodation/Accommodation';
 import Activities from './pages/Activities/Activities';
 import Transport from './pages/Transport/Transport';
 
