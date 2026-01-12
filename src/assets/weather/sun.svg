@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'>
+  <circle cx='12' cy='12' r='4' fill='#FDB813'/>
+  <g stroke='#FDB813' stroke-width='1.2' stroke-linecap='round'>
+    <path d='M12 2v2'/>
+    <path d='M12 20v2'/>
+    <path d='M2 12h2'/>
+    <path d='M20 12h2'/>
+    <path d='M4 4l1.4 1.4'/>
+    <path d='M18.6 18.6L20 20'/>
+    <path d='M4 20l1.4-1.4'/>
+    <path d='M18.6 5.4L20 4'/>
+  </g>
+</svg>

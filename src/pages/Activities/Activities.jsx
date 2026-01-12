@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import './activities.css';
+import sunImg from '../../assets/weather/sun.svg';
+import cloudImg from '../../assets/weather/cloud.svg';
+import rainImg from '../../assets/weather/rain.svg';
+import snowImg from '../../assets/weather/snow.svg';
+import thunderImg from '../../assets/weather/thunder.svg';
+import fogImg from '../../assets/weather/fog.svg';
+
 
 // Local data store (modes -> datasetKey -> days -> activities)
-// We include datasets for single preferences and two combinations: 'Adventure|Culture' and 'Relaxation|Sports'
-// Each dataset contains 5 days and each activity has environment: 'indoor' | 'outdoor' | 'both'
 const DATA = {
   relaxed: {
     'Adventure': [
@@ -112,36 +117,120 @@ const DATA = {
 
 const PREFS = ['Adventure', 'Culture', 'Relaxation', 'Sports'];
 
-const makeKey = (mode, prefs, environment) => {
+const makeKey = (mode, prefs, environment, days = 5) => {
   const ps = Array.from(prefs || []).sort().join(',') || 'ALL';
-  return `${mode}|${ps}|${environment}`;
+  return `${mode}|${ps}|${environment}|${days}`;
 };
 
 const Activities = () => {
   const [mode, setMode] = useState('relaxed');
   const [prefs, setPrefs] = useState(new Set(['Adventure', 'Culture']));
-  const [environment, setEnvironment] = useState('both'); // 'both' | 'indoor' | 'outdoor'
-  const [expanded, setExpanded] = useState(null); // day index
+  const [environment, setEnvironment] = useState('both'); 
+  const [expanded, setExpanded] = useState(null); 
   const [currentItinerary, setCurrentItinerary] = useState([]);
   const [packing, setPacking] = useState([]);
   const [highlights, setHighlights] = useState([]);
 
-  // decide dataset key from selected preferences
+  // Trip settings
+  const [tripDays, setTripDays] = useState(5);
+  const [tripLocation] = useState({ name: 'Zakynthos', lat: 37.7870, lon: 20.8990 });
+
+  // Weather state (fetched from Open-Meteo)
+  const [weather, setWeather] = useState(null);
+  const [weatherLoading, setWeatherLoading] = useState(false);
+  const [weatherError, setWeatherError] = useState(null);
+
+  const weatherCodeToImageSrc = (code) => {
+    if (code === 0) return sunImg;
+    if (code <= 3) return sunImg;
+    if (code === 45 || code === 48) return fogImg;
+    if (code >= 51 && code <= 67) return rainImg;
+    if (code >= 71 && code <= 77) return snowImg;
+    if (code >= 80 && code <= 82) return rainImg;
+    if (code >= 95) return thunderImg;
+    return cloudImg;
+  };
+
+  const weatherCodeToIconDesc = (code) => {
+    if (code === 0) return { icon: '☀️', text: 'Clear' };
+    if (code <= 3) return { icon: '🌤️', text: 'Partly cloudy' };
+    if (code === 45 || code === 48) return { icon: '🌫️', text: 'Fog' };
+    if (code >= 51 && code <= 57) return { icon: '🌦️', text: 'Drizzle' };
+    if (code >= 61 && code <= 67) return { icon: '🌧️', text: 'Rain' };
+    if (code >= 71 && code <= 77) return { icon: '❄️', text: 'Snow' };
+    if (code >= 80 && code <= 82) return { icon: '🌧️', text: 'Showers' };
+    if (code >= 95) return { icon: '⛈️', text: 'Thunder' };
+    return { icon: '☁️', text: 'Cloudy' };
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    const { lat, lon, name } = tripLocation;
+    const cacheKey = `weather_cache_${lat}_${lon}_${tripDays}`;
+    const cacheRaw = localStorage.getItem(cacheKey);
+    if (cacheRaw) {
+      try {
+        const { ts, data } = JSON.parse(cacheRaw);
+        if (Date.now() - ts < 10 * 60 * 1000) {
+          setWeather({ ...data, forecast: (data && data.forecast) || [] });
+          return;
+        }
+      } catch (e) {}
+    }
+
+    const fetchWeather = async (lat, lon) => {
+      setWeatherLoading(true);
+      setWeatherError(null);
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=celsius&daily=temperature_2m_max,precipitation_sum,windspeed_10m_max,weathercode&timezone=auto`;
+        const res = await fetch(url);
+        const json = await res.json();
+        if (cancelled) return;
+        if (json && json.current_weather) {
+          const cw = json.current_weather;
+          const days = json.daily || {};
+          const forecastAll = (days.time || []).map((t, i) => ({ date: t, temp_max: days.temperature_2m_max[i], precipitation: days.precipitation_sum[i], wind: days.windspeed_10m_max[i], code: days.weathercode ? days.weathercode[i] : cw.weathercode }));
+
+          let locationName = name;
+          try {
+            const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&count=1`);
+            const geoJson = await geoRes.json();
+            if (geoJson && geoJson.results && geoJson.results[0]) {
+              const r = geoJson.results[0];
+              locationName = r.name + (r.admin1 ? `, ${r.admin1}` : '') + (r.country ? `, ${r.country}` : '');
+            }
+          } catch (e) {
+          }
+
+          const w = { temp: cw.temperature, wind: cw.windspeed, code: cw.weathercode, forecast: forecastAll.slice(0, tripDays), locationName };
+          setWeather(w);
+          localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: w }));
+        } else {
+          setWeatherError('No weather data');
+        }
+      } catch (e) {
+        if (!cancelled) setWeatherError('Failed to fetch weather');
+      } finally {
+        if (!cancelled) setWeatherLoading(false);
+      }
+    };
+
+    fetchWeather(lat, lon);
+
+    return () => { cancelled = true; };
+  }, [tripLocation, tripDays]);
   const chooseDatasetKey = (prefsSet) => {
     const has = (p) => prefsSet.has(p);
     if (has('Adventure') && has('Culture')) return 'Adventure|Culture';
     if (has('Relaxation') && has('Sports')) return 'Relaxation|Sports';
-    // if exactly one preference selected, return it
     if (prefsSet.size === 1) return Array.from(prefsSet)[0];
-    // otherwise default to ALL
     return 'ALL';
   };
 
   useEffect(() => {
     const datasetKey = chooseDatasetKey(prefs);
-    const storageKey = `activities_version_${makeKey(mode, prefs, environment)}`;
+    const storageKey = `activities_version_${makeKey(mode, prefs, environment, tripDays)}`;
 
-    // try to load cached
     const cached = localStorage.getItem(storageKey);
     if (cached) {
       const parsed = JSON.parse(cached);
@@ -151,40 +240,36 @@ const Activities = () => {
       return;
     }
 
-    // pick the dataset according to current preferences/combos
     const dataset = (DATA[mode] && DATA[mode][datasetKey]) || DATA[mode]['ALL'];
 
     const computed = dataset.map(d => {
       const acts = d.activities.filter(a => {
-        // environment filter
         if (environment !== 'both' && a.environment !== 'both' && a.environment !== environment) return false;
-        // prefs filter: if user has no prefs selected, include all
         if (!prefs || prefs.size === 0) return true;
-        // include activity if it matches any selected preference tag
         const matches = a.tags.some(t => prefs.has(t));
         return matches;
       });
       return { day: d.day, activities: acts.length ? acts : d.activities, fallback: acts.length === 0 };
     });
 
-    // aggregate packing items
+    const sliced = computed.slice(0, tripDays);
+
     const itemsSet = new Set();
-    computed.forEach(d => d.activities.forEach(a => a.items.forEach(i => itemsSet.add(i))));
+    sliced.forEach(d => d.activities.forEach(a => a.items.forEach(i => itemsSet.add(i))));
     const items = Array.from(itemsSet);
 
-    // compute cultural highlights from dataset (unique activity names with 'Culture' tag)
     const highlightsSet = new Set();
-    dataset.forEach(d => d.activities.forEach(a => { if (a.tags.includes('Culture')) highlightsSet.add(a.name); }));
+    sliced.forEach(d => d.activities.forEach(a => { if (a.tags.includes('Culture')) highlightsSet.add(a.name); }));
     const highlightsArr = Array.from(highlightsSet);
 
-    const version = { itinerary: computed, packing: items, highlights: highlightsArr, createdAt: new Date().toISOString() };
-    // store silently (do not show versions UI)
+    const version = { itinerary: sliced, packing: items, highlights: highlightsArr, createdAt: new Date().toISOString() };
     localStorage.setItem(storageKey, JSON.stringify(version));
 
-    setCurrentItinerary(computed);
+    setCurrentItinerary(sliced);
     setPacking(items);
     setHighlights(highlightsArr);
-  }, [mode, prefs, environment]);
+  }, [mode, prefs, environment, tripDays]);
+
 
   const togglePref = (p) => {
     setPrefs(prev => {
@@ -209,11 +294,10 @@ const Activities = () => {
             <h3 className="panel-heading">TripMate</h3>
             <div className="panel-section">
               <strong>Trip</strong>
-              <div>5 days</div>
-            </div>
-            <div className="panel-section">
-              <strong>Weather</strong>
-              <div>☀️ Partly Cloudy</div>
+              <div className="trip-line">
+                <div>{tripDays} days</div>
+                <div className="trip-location">{tripLocation.name}</div>
+              </div>
             </div>
 
             <div className="panel-section">
@@ -237,9 +321,33 @@ const Activities = () => {
             </div>
 
 
+
           </aside>
 
           <main className="center-panel">
+            {weatherLoading ? (
+              <div className="small-title">Loading weather...</div>
+            ) : weatherError ? (
+              <div className="small-title">Unable to load weather</div>
+            ) : weather ? (
+              <div className="main-forecast">
+                <div className="forecast-header">
+                  <div className="forecast-location">{weather.locationName || tripLocation.name}</div>
+                  <div className="forecast-summary">{Math.round(weather.temp)}°C • {Math.round(weather.wind)} km/h</div>
+                </div>
+                <div className="weather-forecast-strip">
+                  {(weather.forecast || []).map(f => (
+                    <div key={f.date} className="weather-day">
+                      <div className="wf-date">{new Date(f.date).toLocaleDateString()}</div>
+                      <img alt={weatherCodeToIconDesc(f.code).text} src={weatherCodeToImageSrc(f.code)} style={{ width: 36, height: 36 }} />
+                      <div className="wf-temp">{Math.round(f.temp_max)}°</div>
+                      <div className="wf-prec">{Math.round(f.precipitation)} mm</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
             <h2 className="panel-heading">Activities & Itinerary</h2>
 
             <div className="tab-bar">
@@ -248,14 +356,12 @@ const Activities = () => {
             </div>
 
             <div>
-              {/* Show all days but only the day labels until expanded */}
               {currentItinerary.map((d, idx) => (
                 <div key={d.day} className={`day-card ${expanded === idx ? 'open' : ''}`}>
                   <div className="day-row" onClick={() => toggleExpand(idx)}>
                     <div className="day-label">
                       <div>{d.day}</div>
                     </div>
-                    <div className={`chevron ${expanded === idx ? 'open' : ''}`}>{expanded === idx ? '˅' : '›'}</div>
                   </div> 
 
                   {expanded === idx && (
@@ -280,6 +386,7 @@ const Activities = () => {
           </main>
 
           <aside className="right-panel">
+
             <h4 className="panel-heading">Packing List (Summary)</h4>
             {packing.length === 0 ? <div className="small-title">No items required.</div> : (
               <div className="packing-list">
@@ -297,7 +404,7 @@ const Activities = () => {
             ) : (
               <ul className="highlights-list">
                 {highlights.map(h => (
-                  <li key={h}>🎭 {h}</li>
+                  <li key={h}>{h}</li>
                 ))}
               </ul>
             )}
