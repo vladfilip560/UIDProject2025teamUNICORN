@@ -1,0 +1,49 @@
+/* Activities page styles */
+.activities-page {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #F5F7FB;
+  color: #0f1724;
+}
+.spacer { height: 20px }
+.activities-layout { display: flex; gap: 20px; align-items: flex-start }
+.left-panel, .center-panel, .right-panel {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #E6EEF6;
+  box-shadow: 0 2px 8px rgba(15,23,36,0.04);
+}
+.left-panel { width: 260px }
+.right-panel { width: 280px }
+.center-panel { flex: 1 }
+.prefs-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px }
+.tab-bar { display: flex; gap: 8px; margin-bottom: 12px }
+.tab { padding: 6px 12px; border-radius: 6px; cursor: pointer; background: #E6EEF6; color: #0f1724; font-weight: 500 }
+.tab.active { background: #0B5ED7; color: #fff; font-weight: 600 }
+.day-card { padding: 12px; border-radius: 8px; background: #ffffff; margin-bottom: 10px; border: 1px solid #DBEAF6 }
+.day-card.open { background: #EEF6FF }
+.day-card .day-label { font-weight: 600 }
+.chevron { color: #0B5ED7 }
+.chevron.open { transform: rotate(180deg) }
+.activity-card { padding: 10px; border-radius: 6px; background: #fff; margin-bottom: 8px; border: 1px solid #EEF3F8 }
+.small-title { font-size: 14px; color: #374151 }
+.packing-list { display: flex; flex-direction: column; gap: 8px }
+.highlights-list { margin-top: 8px }
+.badge { font-size: 12px; color: #1f2937 }
+label input[type="checkbox"] { margin-right: 8px }
+
+/* layout helpers */
+.panel-heading { margin-top: 0 }
+.panel-section { margin-bottom: 12px }
+.radio-list { margin-top: 6px }
+.prefs-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px }
+
+.day-row { display: flex; justify-content: space-between; align-items: center; cursor: pointer }
+.expanded-content { margin-top: 12px }
+.activity-list { padding-left: 18px }
+.activity-item { margin-bottom: 8px }
+.activity-name { font-weight: 600 }
+.activity-meta-list { margin-top: 6px; padding-left: 18px }
+.small-spacer { height: 16px }
+
