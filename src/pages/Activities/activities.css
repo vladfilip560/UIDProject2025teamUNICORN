@@ -1,0 +1,78 @@
+.activities-page {
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  padding: 28px;
+  max-width: 980px;
+  margin: 28px auto;
+  background: #ffffff; 
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.6);
+  color: #071033;
+}
+.spacer { height: 8px }
+.activities-layout { display: flex; gap: 20px; align-items: flex-start }
+
+.left-panel, .center-panel, .right-panel {
+  background: transparent;
+  padding: 0;
+  border-radius: 8px;
+  border: none;
+  box-shadow: none;
+}
+.left-panel { width: 240px }
+.right-panel { width: 280px }
+.center-panel { flex: 1 }
+
+.panel-heading { margin-top: 0; margin-bottom: 12px; font-size: 20px; font-weight: 700; color: #071033 }
+.center-panel .panel-heading { font-size: 28px; margin-bottom: 18px }
+
+.panel-section { margin-bottom: 14px; padding: 12px 14px; border-radius: 10px; background: rgba(11,94,215,0.04); }
+.panel-section strong { display: block; margin-bottom: 6px; color: #071033 }
+.trip-line { display:flex; justify-content:space-between; gap:8px; align-items:center }
+.trip-location { font-size: 14px; color: #071033; opacity: 0.9 }
+
+.prefs-list { display: flex; flex-direction: column; gap: 8px; margin-top: 6px }
+label { font-size: 14px; color: #071033 }
+label input[type="checkbox"] { margin-right: 8px }
+
+.radio-list { margin-top: 6px; color: #071033 }
+.radio-list label { display:block; margin-bottom:6px }
+
+.tab-bar { display: flex; gap: 12px; margin-bottom: 12px }
+.tab { padding: 8px 14px; border-radius: 10px; cursor: pointer; background: rgba(11,94,215,0.06); color: #071033; font-weight: 600; border: 1px solid rgba(11,94,215,0.08) }
+.tab.active { background: #0B5ED7; color: #fff; font-weight: 700; box-shadow: 0 6px 20px rgba(11,94,215,0.24) }
+
+.day-card { padding: 14px; border-radius: 10px; background: #fff; margin-bottom: 12px; border: 1px solid rgba(10,36,86,0.06); box-shadow: 0 6px 18px rgba(11,30,60,0.04) }
+.day-card.open { background: #F6FBFF }
+.day-card .day-label { font-weight: 700; color: #071033 }
+
+.activity-list { padding-left: 18px }
+.activity-item { margin-bottom: 10px }
+.activity-name { font-weight: 700; color: #071033 }
+.activity-meta-list { margin-top: 8px; padding-left: 18px; color: #374151 }
+.small-title { font-size: 13px; color: #6b7280 }
+
+.packing-list { display: flex; flex-direction: column; gap: 8px }
+.highlights-list { margin-top: 8px; color: #071033 }
+.badge { font-size: 12px; color: #1f2937 }
+.small-spacer { height: 14px }
+
+.main-forecast { margin-bottom: 18px; padding: 12px 14px; border-radius: 10px; background: rgba(7,16,51,0.03) }
+.forecast-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px }
+.forecast-location { font-weight:700; color: #071033 }
+.forecast-summary { color: #071033; opacity: 0.9 }
+.weather-forecast-strip { display:flex; gap: 20px; }
+.weather-day { display:flex; flex-direction:column; align-items:center; font-size:12px; color:#071033 }
+.wf-date { font-size: 12px; color: #6b7280 }
+.wf-temp { font-weight:700; color: #0B5ED7 }
+.wf-prec { font-size:12px; color:#0B5ED7 }
+.wf-icon { font-size: 13px; color: #071033; font-weight: 600; text-align: center; margin-bottom: 6px }
+
+.wf-small-day { display:flex; flex-direction:column; align-items:center; font-size:12px }
+
+@media (max-width: 900px) {
+  .activities-layout { flex-direction: column }
+  .left-panel, .right-panel { width: 100% }
+  .center-panel { width: 100% }
+  .activities-page { margin: 18px; padding: 18px }
+}
+
