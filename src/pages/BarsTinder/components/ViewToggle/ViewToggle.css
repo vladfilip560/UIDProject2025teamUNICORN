@@ -1,0 +1,26 @@
+/* View Toggle */
+.view-toggle {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.toggle-btn {
+  padding: 10px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.toggle-btn.active {
+  background: white;
+  color: #667eea;
+}

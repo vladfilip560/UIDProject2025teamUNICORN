@@ -1,0 +1,69 @@
+/* Main Bars component styles */
+.bars-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header Styles */
+.bars-header {
+  max-width: 500px;
+  margin: 0 auto 30px;
+  text-align: center;
+  color: white;
+}
+
+.bars-header h1 {
+  margin: 0 0 10px;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.bars-header p {
+  margin: 0 0 20px;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+/* Main Content */
+.bars-main {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Global Button Styles */
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: black;
+  border: 1px solid #5a67d8;
+}
+
+.btn-secondary:hover {
+  background: #5a67d8;
+  color: white;
+  transform: translateY(-2px);
+}
