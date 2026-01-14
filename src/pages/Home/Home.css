@@ -1,0 +1,197 @@
+:root {
+  --primary: #3b5bfd;
+  --primary-hover: #2f49d8;
+  --text-dark: #1f2a44;
+  --text-muted: #64748b;
+  --bg-sidebar: #ffffff;
+  --bg-input: #f8fafc;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --radius-md: 12px;
+  --radius-lg: 24px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Layout */
+.home-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden; /* Prevents scrollbars if content is small */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 320px; /* Slightly wider for better spacing */
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.02);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-section {
+  margin-bottom: 28px;
+}
+
+.sidebar-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* Styled to look like info cards instead of inputs */
+.sidebar-info-card {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-input);
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.sidebar-info-card:hover {
+  background-color: #f1f5f9;
+  border-color: var(--border-color);
+}
+
+.icon {
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+/* Search button */
+.search-btn {
+  margin-top: auto;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background-color: var(--primary);
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 12px rgba(59, 91, 253, 0.3);
+  transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-btn:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 91, 253, 0.4);
+}
+
+/* Main content / Hero */
+.hero {
+  flex: 1;
+  position: relative;
+  /* Using a real image of Zakynthos from Unsplash */
+  background-image: url('https://images.unsplash.com/photo-1566373721388-7507eb207563?q=80&w=2070&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 100px;
+}
+
+/* Gradient Overlay to make text readable */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2; /* Ensures text is above the overlay */
+  color: white;
+  max-width: 600px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.hero h1 {
+  font-size: 56px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.hero p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 48px;
+  line-height: 1.6;
+}
+
+/* Glassmorphism Card */
+.hero-card {
+  display: inline-flex;
+  gap: 40px;
+  padding: 24px 32px;
+  background-color: rgba(255, 255, 255, 0.15); /* Translucent */
+  backdrop-filter: blur(12px); /* Blur effect */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.hero-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-stat span:first-child {
+  font-size: 20px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
