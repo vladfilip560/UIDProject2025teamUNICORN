@@ -1,0 +1,45 @@
+/* Location Section */
+.location-section {
+  margin-bottom: 20px;
+}
+
+.current-location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.change-location-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.change-location-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.location-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.location-input {
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  outline: none;
+  text-align: center;
+}

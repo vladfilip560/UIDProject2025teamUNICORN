@@ -9,7 +9,7 @@ const Navbar = () => {
       <Link to="/Acomodation" className="nav-link">Acomodation</Link>
       <Link to="/Activities" className="nav-link">Activities</Link>
       <Link to="/Transport" className="nav-link">Transport</Link>
-      <Link to="/BarsTinder" className="nav-link">Bars</Link>
+      <Link to="/BarsTinder" className="nav-link">Places to Visit</Link>
     </nav>
   );
 };
